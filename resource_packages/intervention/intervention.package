@@ -1,0 +1,11 @@
+mod = [
+	"intervention"
+]
+
+package = [
+	"resource_packages/intervention/intervention"
+]
+
+lua = [
+	"scripts/mods/intervention/*"
+]
