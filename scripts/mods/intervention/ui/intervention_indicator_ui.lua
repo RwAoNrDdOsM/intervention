@@ -1,14 +1,14 @@
 local mod = get_mod("intervention")
-local definitions = mod:dofile("scripts/mods/intervention/intervention_indicator_ui_definitions")
+local definitions = mod:dofile("scripts/mods/intervention/ui/intervention_indicator_ui_definitions")
 InterventionIndicatorUI = class(InterventionIndicatorUI)
 
-InterventionIndicatorUI.init = function (self, ingame_ui_context)
+InterventionIndicatorUI.init = function (self, parent, ingame_ui_context)
+	self._parent = parent
 	self.ui_renderer = ingame_ui_context.ui_renderer
 	self.ingame_ui = ingame_ui_context.ingame_ui
 	self.input_manager = ingame_ui_context.input_manager
 	local world = ingame_ui_context.world_manager:world("level_world")
 	self.wwise_world = Managers.world:wwise_world(world)
-	self.delay = 0
 
 	self:create_ui_elements()
 	rawset(_G, "intervention_indicator_ui", self)
@@ -26,7 +26,20 @@ InterventionIndicatorUI.destroy = function (self)
 end
 
 InterventionIndicatorUI.set_current_intervention = function (self, intervention)
-    self.current_intervention = intervention
+	self.current_intervention = intervention
+	local widget = self.area_text_box
+	if intervention == "rush" then
+		widget.style.text.text_color = Colors.get_color_table_with_alpha("red", 0)
+		self.current_intervention = mod:localize("rush_intervention")
+	elseif intervention == "speedrun" then
+		widget.style.text.text_color = Colors.get_color_table_with_alpha("cheeseburger", 0)
+		self.current_intervention = mod:localize("speed_run_intervention")
+	elseif intervention == "navmesh" then
+		widget.style.text.text_color = Colors.get_color_table_with_alpha("gray", 0)
+		self.current_intervention = mod:localize("outside_navmesh_intervention")
+	else
+		widget.style.text.text_color = Colors.get_color_table_with_alpha("white", 0)
+	end
 end
 
 InterventionIndicatorUI.update = function (self, dt)
@@ -36,21 +49,14 @@ InterventionIndicatorUI.update = function (self, dt)
 
     if Unit.alive(player_unit) then
         local player_hud_extension = ScriptUnit.extension(player_unit, "hud_system")
-		if self.delay >= 5 and self.current_intervention ~= nil then
-			self.current_intervention = nil
-			self.saved_intervention = nil
-			self.delay = 0
-		else
-			self.delay = self.delay + 1
-		end
 		local saved_intervention = self.saved_intervention
 		local current_intervention = self.current_intervention
         
-		if current_intervention ~= nil and current_intervention ~= saved_intervention then
-			self.saved_intervention = saved_intervention
+		if current_intervention ~= nil then --and current_intervention ~= saved_intervention
+			self.current_intervention = nil
 			local ui_settings = UISettings.intervention_indicator
 			local widget = self.area_text_box
-			widget.content.text = tostring(current_intervention)
+			widget.content.text = current_intervention
 			self.area_text_box_animation = UIAnimation.init(UIAnimation.function_by_time, widget.style.text.text_color, 1, 0, 255, ui_settings.fade_time, math.easeInCubic, UIAnimation.wait, ui_settings.wait_time, UIAnimation.function_by_time, widget.style.text.text_color, 1, 255, 0, ui_settings.fade_time, math.easeInCubic)
 			self.area_text_box_shadow_animation = UIAnimation.init(UIAnimation.function_by_time, widget.style.text_shadow.text_color, 1, 0, 255, ui_settings.fade_time, math.easeInCubic, UIAnimation.wait, ui_settings.wait_time, UIAnimation.function_by_time, widget.style.text_shadow.text_color, 1, 255, 0, ui_settings.fade_time, math.easeInCubic)
 
