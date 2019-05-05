@@ -37,25 +37,32 @@ InterventionBreedUI.destroy = function (self)
 end
 
 InterventionBreedUI.create_ui_elements = function (self)
-	UIRenderer.clear_scenegraph_queue(self.ui_renderer)
-
 	self.ui_scenegraph = UISceneGraph.init_scenegraph(definitions.scenegraph_definition)
-	self.message_widgets = {}
+	self.widgets = {
+		rush = {
+			rush_text = UIWidget.init(definitions.widget_definitions.rush_text),
+			rush_text_shadow = UIWidget.init(definitions.widget_definitions.rush_text_shadow),
+			icon_1 = UIWidget.init(definitions.widget_definitions.icon_1),
+			icon_2 = UIWidget.init(definitions.widget_definitions.icon_2),
+			icon_3 = UIWidget.init(definitions.widget_definitions.icon_3),
+		},
+		speedrunning = {
+			speedrunning_text = UIWidget.init(definitions.widget_definitions.speedrunning_text),
+			speedrunning_text_shadow = UIWidget.init(definitions.widget_definitions.speedrunning_text_shadow),
+			icon_4 = UIWidget.init(definitions.widget_definitions.icon_4),
+			icon_5 = UIWidget.init(definitions.widget_definitions.icon_5),
+			icon_6 = UIWidget.init(definitions.widget_definitions.icon_6),
+			icon_7 = UIWidget.init(definitions.widget_definitions.icon_7),
+		}
+	}
 
-	for _, widget in pairs(definitions.message_widgets) do
-		self.message_widgets[#self.message_widgets + 1] = UIWidget.init(widget)
-	end
-
-	self._unused_widgets = table.clone(self.message_widgets)
-	mod:echo("InterventionBreedUI Created UI Elements")
+	UIRenderer.clear_scenegraph_queue(self.ui_renderer)
 end
 
 InterventionBreedUI.remove_event = function (self, index)
 	local events = self._intervention_breed_events
 	local event = table.remove(events, index)
 	local widget = event.widget
-	local unused_widgets = self._unused_widgets
-	unused_widgets[#unused_widgets + 1] = widget
 end
 
 InterventionBreedUI.add_event = function (self, breed_texture, event_type,...)
@@ -63,15 +70,41 @@ InterventionBreedUI.add_event = function (self, breed_texture, event_type,...)
 		local events = self._intervention_breed_events
 		local t = Managers.time:time("game")
 		local increment_duration = UISettings.intervention_breed.increment_duration
-		local message_widgets = self.message_widgets
-		local unused_widgets = self._unused_widgets
+		--local message_widgets = self.message_widgets
+		--local unused_widgets = self._unused_widgets
+		local widget = widget
 
-		if #unused_widgets == 0 then
-			self:remove_event(#events)
-        end
-        
-		local widget = table.remove(unused_widgets, 1)
-		local offset = widget.offset
+		if event_type == "rush" then
+			if self.widgets.rush.rush_text.content.rush_string == "" then
+				self.widgets.rush.rush_text.content.rush_string = "Rush"
+				self.widgets.rush.rush_text_shadow.content.rush_string = "Rush"
+			end
+			if self.widgets.rush.icon_1.content.icon_1 == nil then
+				widget = self.widgets.rush.icon_1
+			elseif self.widgets.rush.icon_2.content.icon_2 == nil then
+				widget = self.widgets.rush.icon_2
+			elseif self.widgets.rush.icon_3.content.icon_3 == nil then
+				widget = self.widgets.rush.icon_3
+			end
+		elseif event_type == "speedrun" then
+			if self.widgets.speedrunning.speedrunning_text.content.rush_string == "" then
+				self.widgets.speedrunning.speedrunning_text.content.rush_string = "Speedrunning"
+				self.widgets.speedrunning.speedrunning_text_shadow.content.rush_string = "Speedrunning"
+			end
+			if self.widgets.speedrunning.icon_5.content.icon_5 == nil then
+				widget = self.widgets.speedrunning.icon_5
+			elseif self.widgets.speedrunning.icon_6.content.icon_6 == nil then
+				widget = self.widgets.speedrunning.icon_6
+			elseif self.widgets.speedrunning.icon_7.content.icon_7 == nil then
+				widget = self.widgets.speedrunning.icon_7
+			end
+		end
+
+		if widget == nil then
+			mod:echo("Intervention QoL: Unable to aquire a widger")
+			return
+		end
+
 		local event = {
 			text = "",
 			shown_amount = 0,
@@ -131,7 +164,6 @@ InterventionBreedUI.update = function (self, dt, t)
 	local ui_scenegraph = self.ui_scenegraph
 	local input_service = Managers.input:get_service("Player")
 	local render_settings = self.render_settings
-
 	--[[for name, animation in pairs(self._animations) do
 		if self._animations[name] then
 			if not UIAnimation.completed(animation) then
@@ -162,21 +194,15 @@ InterventionBreedUI.update = function (self, dt, t)
             local timer = conflict_director:_next_intervention_time(t)
             if event_type == "rush" then
                 show_duration = timer[1]
-                content.text = "Rush"
-                style.text = Colors.get_table("red") 
             elseif event_type == "speedrun" then
                 show_duration = timer[2]
-                content.text = "Speedrunning"
-                style.text = Colors.get_table("cheeseburger")
             elseif event_type == "navmesh" then
                 show_duration = timer[3]
-                content.text = "NavMesh"
-                style.text = Colors.get_table("gray")
             end
         end
 
 		if not event.remove_time then
-			event.remove_time = t + show_duration
+			event.remove_time = t + show_duration + 1
 		elseif event.remove_time < t then
 			self:remove_event(index)
 
@@ -184,41 +210,7 @@ InterventionBreedUI.update = function (self, dt, t)
         end
         
 		if not removed then
-			local step_size = -80
-			local new_height_offset = -((index - 1) * step_size)
-			local diff = math.abs(math.abs(offset[2]) - math.abs(new_height_offset))
-
-			if new_height_offset < offset[2] then
-				local speed = 400
-				offset[2] = math.max(offset[2] - dt * speed, new_height_offset)
-			else
-				offset[2] = new_height_offset
-			end
-
-			local time_left = event.remove_time - t
-			local fade_duration = UISettings.intervention_breed.fade_duration
-			local fade_out_progress = 0
-
-			if fade_duration < time_left then
-				fade_out_progress = math.clamp((show_duration - time_left) / fade_duration, 0, 1)
-				offset[1] = -(math.easeInCubic(1 - fade_out_progress) * 35)
-			else
-				fade_out_progress = math.clamp(time_left / fade_duration, 0, 1)
-			end
-
-			local anim_progress = math.easeOutCubic(fade_out_progress)
-			local alpha = 255 * anim_progress
-			local texte_style_ids = content.texte_style_ids
-
-			for _, style_id in ipairs(texte_style_ids) do
-				style[style_id].color[1] = alpha
-			end
-
-			render_settings.snap_pixel_positions = time_left <= fade_duration
-
 			UIRenderer.draw_widget(ui_renderer, widget)
-
-			render_settings.snap_pixel_positions = snap_pixel_positions
 		end
 	end
 

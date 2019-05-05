@@ -30,13 +30,13 @@ InterventionIndicatorUI.set_current_intervention = function (self, intervention)
 	local widget = self.area_text_box
 	if intervention == "rush" then
 		widget.style.text.text_color = Colors.get_color_table_with_alpha("red", 0)
-		self.current_intervention = mod:localize("rush_intervention")
+		self.current_intervention = "rush_intervention"
 	elseif intervention == "speedrun" then
 		widget.style.text.text_color = Colors.get_color_table_with_alpha("cheeseburger", 0)
-		self.current_intervention = mod:localize("speed_run_intervention")
+		self.current_intervention = "speed_run_intervention"
 	elseif intervention == "navmesh" then
 		widget.style.text.text_color = Colors.get_color_table_with_alpha("gray", 0)
-		self.current_intervention = mod:localize("outside_navmesh_intervention")
+		self.current_intervention = "outside_navmesh_intervention"
 	else
 		widget.style.text.text_color = Colors.get_color_table_with_alpha("white", 0)
 	end
@@ -56,7 +56,7 @@ InterventionIndicatorUI.update = function (self, dt)
 			self.current_intervention = nil
 			local ui_settings = UISettings.intervention_indicator
 			local widget = self.area_text_box
-			widget.content.text = current_intervention
+			widget.content.text = mod:localize(current_intervention)
 			self.area_text_box_animation = UIAnimation.init(UIAnimation.function_by_time, widget.style.text.text_color, 1, 0, 255, ui_settings.fade_time, math.easeInCubic, UIAnimation.wait, ui_settings.wait_time, UIAnimation.function_by_time, widget.style.text.text_color, 1, 255, 0, ui_settings.fade_time, math.easeInCubic)
 			self.area_text_box_shadow_animation = UIAnimation.init(UIAnimation.function_by_time, widget.style.text_shadow.text_color, 1, 0, 255, ui_settings.fade_time, math.easeInCubic, UIAnimation.wait, ui_settings.wait_time, UIAnimation.function_by_time, widget.style.text_shadow.text_color, 1, 255, 0, ui_settings.fade_time, math.easeInCubic)
 

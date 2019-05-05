@@ -36,6 +36,58 @@ local widget_definitions = {
 		element = {
 			passes = {
 				{
+					style_id = "rush_text",
+					pass_type = "text",
+					text_id = "rush_string",
+					retained_mode = false,
+					content_check_function = function (content)
+						if content.rush_string == "" then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					style_id = "rush_text_shadow",
+					pass_type = "text",
+					text_id = "rush_string",
+					retained_mode = false,
+					content_check_function = function (content)
+						if content.rush_string == "" then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					style_id = "speedrunning_text",
+					pass_type = "text",
+					text_id = "speedrunning_string",
+					retained_mode = false,
+					content_check_function = function (content)
+						if content.speedrun_string == "" then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					style_id = "speedrunning_text_shadow",
+					pass_type = "text",
+					text_id = "speedrunning_string",
+					retained_mode = false,
+					content_check_function = function (content)
+						if content.speedrun_string == "" then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
 					pass_type = "texture",
 					style_id = "icon_1",
 					texture_id = "icon_1",
@@ -46,57 +98,132 @@ local widget_definitions = {
 
 						return true
 					end
-                },
-                {
-                    style_id = "text",
-                    pass_type = "text",
-                    text_id = "text",
-                    retained_mode = false,
-                    content_check_function = function ()
-                      return true
-                    end
-                  },
-                  {
-                    style_id = "text",
-                    pass_type = "text_shadow",
-                    text_id = "text",
-                    retained_mode = false,
-                    content_check_function = function ()
-                      return true
-                    end
-                  },
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_2",
+					texture_id = "icon_2",
+					content_check_function = function (content)
+						if not content.icon_2 then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_3",
+					texture_id = "icon_3",
+					content_check_function = function (content)
+						if not content.icon_3 then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_4",
+					texture_id = "icon_4",
+					content_check_function = function (content)
+						if not content.icon_4 then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_5",
+					texture_id = "icon_5",
+					content_check_function = function (content)
+						if not content.icon_5 then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_6",
+					texture_id = "icon_6",
+					content_check_function = function (content)
+						if not content.icon_6 then
+							return false
+						end
+
+						return true
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "icon_7",
+					texture_id = "icon_7",
+					content_check_function = function (content)
+						if not content.icon_7 then
+							return false
+						end
+
+						return true
+					end
+        },
 			}
 		},
 		content = {
-			text = "",
-			icon_texture = "",
-			message_tables = {}
+			rush_string = "",
+			speedrun_string = "",
 		},
 		style = {
-			text = {
-				vertical_alignment = "bottom",
-				dynamic_font = true,
-				horizontal_alignment = "right",
+			rush_text = {
+				vertical_alignment = "center",
 				font_type = "hell_shark",
-				font_size = FONT_SIZE,
-				text_color = Colors.get_color_table_with_alpha("white", 255),
+				font_size = 16,
+				horizontal_alignment = "center",
+				text_color = Colors.get_table("red"),
 				offset = {
 					0,
-					-25,
+					0,
 					0
 				}
-            },
-            text_shadow = {
-				vertical_alignment = "bottom",
-				dynamic_font = true,
-				horizontal_alignment = "right",
+			},
+			rush_text_shadow = {
+				vertical_alignment = "center",
 				font_type = "hell_shark",
-				font_size = FONT_SIZE,
-				text_color = Colors.get_color_table_with_alpha("black", 255),
+				font_size = 16,
+				horizontal_alignment = "center",
+				text_color = Colors.get_table("black"),
 				offset = {
-					2,
-					-25,
-					-2
+					0 + 2,
+					0 - 2,
+					0
+				}
+			},
+			speedrunning_text = {
+				vertical_alignment = "center",
+				font_type = "hell_shark",
+				font_size = 16,
+				horizontal_alignment = "center",
+				text_color = Colors.get_table("red"),
+				offset = {
+					-100,
+					0,
+					0
+				}
+			},
+			speedrunning_text_shadow = {
+				vertical_alignment = "center",
+				font_type = "hell_shark",
+				font_size = 16,
+				horizontal_alignment = "center",
+				text_color = Colors.get_table("black"),
+				offset = {
+					-100 + 2,
+					0 - 2,
+					0
 				}
 			},
 			icon_1 = {
@@ -105,129 +232,87 @@ local widget_definitions = {
 					50
 				},
 				offset = {
-					150,
 					0,
+					-40,
 					0
 				},
-				color = Colors.get_table("white")
+				color = Colors.get_table("red")
+			},
+			icon_2 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					0,
+					-40 - 80,
+					0
+				},
+				color = Colors.get_table("red")
+			},
+			icon_3 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					0,
+					-40 - 80 - 80,
+					0
+				},
+				color = Colors.get_table("red")
+			},
+			icon_4 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					-100,
+					-40,
+					0
+				},
+				color = Colors.get_table("cheeseburger")
+			},
+			icon_5 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					-100,
+					-40 - 80,
+					0
+				},
+				color = Colors.get_table("cheeseburger")
+			},
+			icon_6 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					-100,
+					-40 - 80 - 80,
+					0
+				},
+				color = Colors.get_table("cheeseburger")
+			},
+			icon_7 = {
+				size = {
+					50,
+					50
+				},
+				offset = {
+					-100,
+					-40 - 80 - 80,
+					0
+				},
+				color = Colors.get_table("cheeseburger")
 			},
 		}
 	}
 }
-
-local function create_message_widgets(number_of_slots)
-	local entries = {}
-
-	for i = 1, number_of_slots, 1 do
-		local message = {
-			scenegraph_id = "message_animated",
-			element = {
-				passes = {
-					{
-						pass_type = "texture",
-						style_id = "icon_1",
-						texture_id = "icon_1",
-						content_check_function = function (content)
-							if not content.icon_1 then
-								return false
-							end
-
-							return true
-						end
-					},
-					{
-						pass_type = "texture",
-						style_id = "icon_2",
-						texture_id = "icon_2",
-						content_check_function = function (content)
-							if not content.icon_2 then
-								return false
-							end
-
-							return true
-						end
-					},
-					{
-						pass_type = "texture",
-						style_id = "icon_3",
-						texture_id = "icon_3",
-						content_check_function = function (content)
-							if not content.icon_3 then
-								return false
-							end
-
-							return true
-						end
-					}
-				}
-			},
-			content = {
-				text = "",
-				icon_texture = "hud_tutorial_icon_info",
-				message_tables = {}
-			},
-			style = {
-				text = {
-					vertical_alignment = "bottom",
-					dynamic_font = true,
-					horizontal_alignment = "right",
-					font_type = "hell_shark",
-					font_size = FONT_SIZE,
-					text_color = Colors.get_table("white"),
-					offset = {
-						0,
-						-25,
-						0
-					}
-				},
-				icon_1 = {
-					size = {
-						50,
-						50
-					},
-					offset = {
-						0,
-						0,
-						0
-					},
-					color = Colors.get_table("white")
-				},
-				icon_2 = {
-					size = {
-						50,
-						50
-					},
-					offset = {
-						75,
-						0,
-						0
-					},
-					color = Colors.get_table("white")
-				},
-				icon_3 = {
-					size = {
-						50,
-						50
-					},
-					offset = {
-						150,
-						0,
-						0
-					},
-					color = Colors.get_table("white")
-				}
-			},
-			offset = {
-				0,
-				0,
-				0
-			}
-		}
-		entries[i] = message
-	end
-
-	return entries
-end
 
 local function create_reinforcement_widget(scenegraph_id, frame_settings_name, scale, retained_mode)
 	scale = scale or 1
