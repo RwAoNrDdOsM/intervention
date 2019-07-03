@@ -5,17 +5,17 @@ return {
 	description = mod:localize("mod_description"),
 	is_togglable = true,
 	options = {
-        widgets = {
+    widgets = {
 			{
 				setting_id    = "loneliness",
 				type          = "dropdown",
 				default_value = "both",
 				options = {
-				  {text = "disabled",   value = "disabled", show_widgets = {}},
-				  {text = "both",   value = "both", show_widgets = {1,2,3,4,5,6,7}},
-				  {text = "player",   value = "player", show_widgets = {1,2,3,4,7}},
-				  {text = "team", value = "team", show_widgets = {1,2,5,6,7}
-				  },
+					{text = "disabled",   value = "disabled", show_widgets = {}},
+					{text = "both",   value = "both", show_widgets = {1,2,3,4,5,6,7}},
+					{text = "player",   value = "player", show_widgets = {1,2,3,4,7}},
+					{text = "team", value = "team", show_widgets = {1,2,5,6,7}
+					},
 				},
 				sub_widgets = {
 					{
@@ -104,7 +104,7 @@ return {
 						unit_text = "px",                              
 					},
 				}
-			  }
-        }
+			}			
+			}
     },
 }

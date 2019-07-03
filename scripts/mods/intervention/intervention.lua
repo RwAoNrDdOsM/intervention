@@ -134,6 +134,7 @@ mod:hook_safe(ConflictDirector, "init", function(self, world, level_key, network
   self.navmesh_timer = true
 end)
 
+-- Should rework this command so it is more efficient
 ConflictDirector._next_intervention_time = function(self)
   local is_server = Managers.state.network.is_server
   local t = self._time
